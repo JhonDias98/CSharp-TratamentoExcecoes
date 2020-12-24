@@ -19,7 +19,6 @@ namespace ByteBank_Excecoes
             }
             set
             {
-                //Validar CPF
                 _cpf = value;
             } 
         }

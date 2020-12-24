@@ -53,17 +53,18 @@ namespace ByteBank_Excecoes
             TaxaOperacao = 30 / TotalDeContasCriadas;
         }
 
-        public bool Sacar(double valor)
+        public void Sacar(double valor)
         {
+            if(valor < 0)
+            {
+                throw new ArgumentException("Valor inválido para o saque", nameof(valor));
+            }
             if (this._saldo < valor)
             {
-                return false;
+                throw new SaldoInsuficienteException(Saldo, valor);
             }
-            else
-            {
-                this._saldo -= valor;
-                return true;
-            }
+           
+            this._saldo -= valor;
         }
 
         public void Depositar(double valor)
@@ -71,18 +72,15 @@ namespace ByteBank_Excecoes
             this._saldo += valor;
         }
 
-        public bool Transferir(double valor, ContaCorrente contaDestino)
+        public void Transferir(double valor, ContaCorrente contaDestino)
         {
-            if (this._saldo < valor)
+            if (valor < 0)
             {
-                return false;
+                throw new ArgumentException("Valor inválido para a transferência", nameof(valor));
             }
-            else
-            {
-                this._saldo -= valor;
-                contaDestino.Depositar(valor);
-                return true;
-            }
+
+            Sacar(valor);
+            contaDestino.Depositar(valor);           
         }
     }
 }
